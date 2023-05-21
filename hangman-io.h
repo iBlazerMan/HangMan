@@ -10,6 +10,7 @@ extern const char *letter_prompt;
 extern const char *not_a_letter;
 extern const char *already_guessed_letter;
 extern const char *not_in_word;
+extern const char *correct_guess;
 extern const char *not_last_guess;
 extern const char *play_again;
 extern const char *invalid_play_again_response;

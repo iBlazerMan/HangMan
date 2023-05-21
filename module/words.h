@@ -3,6 +3,7 @@
 //   numbered 1...max_words
 
 extern const int max_words;
+extern const int min_words;
 
 // get_word(n) returns word #n
 // requires: 1 <= n <= max_words

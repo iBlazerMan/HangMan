@@ -43,7 +43,6 @@ void conclude(int stat, const char* a) {
     assert(a);
     char inp = '0';
     if (stat == 0) {
-        print_hangman(6);
         printf(game_over, a);
     } else if (stat == 1) {
         printf(congratulations, a);
@@ -68,16 +67,16 @@ void conclude(int stat, const char* a) {
 //         produces output
 // time: O(n^2)
 void hangman (void) {
-    printf(enter_game_number, max_words);
+    printf(enter_game_number, min_words, max_words);
     int n = 0;
     scanf(" %d", &n);
-    if (n > max_words || n < 1) {
-        printf("%s", invalid_game_number);
+    if (n > max_words || n < min_words) {
+        printf(invalid_game_number, n);
         hangman();
     } else {
-        char w[51] = {};
-        char disp[51] = {};
-        char guessed[27] = {};
+        char w[9] = {};
+        char disp[9] = {};
+        char guessed[26] = {};
         int len = strlen(get_word(n));
         int strikes = 0;
         char inp = '0';
@@ -90,21 +89,28 @@ void hangman (void) {
             }  
         }
         disp[len] = '\0';
+        for (int i = 0; i < 26; ++i) {
+            guessed[i] = 0;
+        }
         
+        print_hangman(strikes);
         while (1) {
-            print_hangman(strikes);
             printf("%s", letter_prompt);
             printf("%s\n", disp);
             scanf(" %c", &inp);
             if (!(inp >= 'a' && inp <= 'z') && !(inp >= 'A' && inp <= 'Z')) {
                 printf(not_a_letter, inp);
                 continue;
-            } if (inp >= 'a' && inp <= 'z') {
-                inp = inp - 'a' + 'A';
-            } if (check_exist(guessed, inp)) {
+            } 
+            if (inp >= 'A' && inp <= 'Z') {
+                inp = inp - 'A' + 'a';
+            } 
+            if (check_exist(guessed, inp)) {
                 printf(already_guessed_letter, inp);
                 continue;
-            } else if (check_exist(w, inp)) {
+            } 
+            if (check_exist(w, inp)) {
+                printf(correct_guess, inp);
                 for(int i = 0; i < len; ++i) {
                     if (w[i] == inp) {
                         disp[i] = inp;
@@ -116,9 +122,10 @@ void hangman (void) {
                 }
                 array_add(guessed, inp);
             } else if (!check_exist(w, inp)) {
+                strikes++;
                 array_add(guessed, inp);
+                print_hangman(strikes);
                 printf (not_in_word, inp);
-                strikes += 1;
                 if (strikes == max_strikes) {
                     conclude(0, w);
                     break;
